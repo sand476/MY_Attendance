@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance Portal</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+            --light-bg: #f5f7fb;
+            --dark-text: #333;
+            --light-text: #fff;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: var(--light-bg);
+            border: none;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-right: 5px;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 var(--border-radius) var(--border-radius) var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--light-bg);
+        }
+        
+        .present {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .absent {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        
+        .leave {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+        
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .attendance-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-card {
+            flex: 1;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin: 0 10px;
+            color: var(--light-text);
+        }
+        
+        .summary-card:first-child {
+            margin-left: 0;
+        }
+        
+        .summary-card:last-child {
+            margin-right: 0;
+        }
+        
+        .summary-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .summary-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .total-card {
+            background-color: var(--primary-color);
+        }
+        
+        .present-card {
+            background-color: var(--success-color);
+        }
+        
+        .absent-card {
+            background-color: var(--danger-color);
+        }
+        
+        .leave-card {
+            background-color: var(--warning-color);
+        }
+        
+        .percentage-card {
+            background-color: var(--secondary-color);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+            display: block;
+        }
+        
+        .alert-danger {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            display: block;
+        }
+        
+        .attendance-status {
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-dot.present {
+            background-color: var(--success-color);
+        }
+        
+        .status-dot.absent {
+            background-color: var(--danger-color);
+        }
+        
+        .status-dot.leave {
+            background-color: var(--warning-color);
+        }
+        
+        /* Digital attendance capture section */
+        .capture-attendance {
+            margin-top: 2rem;
+        }
+        
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .qr-code img {
+            max-width: 200px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        
+        .location-status {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .attendance-tabs {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .attendance-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: var(--light-bg);
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+        
+        .attendance-tab.active {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+        }
+        
+        .attendance-tab:first-child {
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+        
+        .attendance-tab:last-child {
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+        
+        .attendance-content {
+            display: none;
+        }
+        
+        .attendance-content.active {
+            display: block;
+        }
+        
+        .webcam-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+        }
+        
+        .location-btn {
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                margin-right: 0;
+                margin-bottom: 5px;
+                border-radius: var(--border-radius);
+            }
+            
+            .attendance-summary {
+                flex-direction: column;
+            }
+            
+            .summary-card {
+                margin: 0 0 10px 0;
+            }
+            
+            .student-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Student Attendance Portal</h1>
+            <div class="student-info">
+                <div>
+                    <p><strong>Name:</strong> <span id="studentName">John Doe</span></p>
+                    <p><strong>ID:</strong> <span id="studentId">S12345</span></p>
+                </div>
+                <div>
+                    <p><strong>Course:</strong> <span id="studentCourse">Computer Science</span></p>
+                    <p><strong>Semester:</strong> <span id="studentSemester">5</span></p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-btn" data-tab="attendance">View Attendance</button>
+            <button class="tab-btn" data-tab="leave">Apply for Leave</button>
+            <button class="tab-btn" data-tab="calculator">Attendance Calculator</button>
+            <button class="tab-btn" data-tab="digital-attendance">Digital Attendance</button>
+        </div>
+        
+        <div id="dashboard" class="tab-content active">
+            <div class="attendance-summary">
+                <div class="summary-card total-card">
+                    <h3 id="totalClasses">45</h3>
+                    <p>Total Classes</p>
+                </div>
+                <div class="summary-card present-card">
+                    <h3 id="presentClasses">38</h3>
+                    <p>Present</p>
+                </div>
+                <div class="summary-card absent-card">
+                    <h3 id="absentClasses">5</h3>
+                    <p>Absent</p>
+                </div>
+                <div class="summary-card leave-card">
+                    <h3 id="leaveClasses">2</h3>
+                    <p>On Leave</p>
+                </div>
+                <div class="summary-card percentage-card">
+                    <h3 id="attendancePercentage">84.4%</h3>
+                    <p>Attendance</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">Attendance Progress</h2>
+                <div class="progress-bar">
+                    <div class="progress" id="attendanceProgress" style="width: 84.4%;"></div>
+                </div>
+                <p id="attendanceStatus">Your attendance is good! Keep it up.</p>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">Recent Attendance</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentAttendance">
+                        <tr>
+                            <td>21 Mar 2025</td>
+                            <td>Data Structures</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr>
+                            <td>20 Mar 2025</td>
+                            <td>Database Management</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr>
+                            <td>19 Mar 2025</td>
+                            <td>Computer Networks</td>
+                            <td class="attendance-status"><span class="status-dot absent"></span> <span class="absent">Absent</span></td>
+                        </tr>
+                        <tr>
+                            <td>18 Mar 2025</td>
+                            <td>Operating Systems</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr>
+                            <td>17 Mar 2025</td>
+                            <td>Software Engineering</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">Upcoming Leave Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaveRequests">
+                        <tr>
+                            <td>25 Mar 2025</td>
+                            <td>26 Mar 2025</td>
+                            <td>Medical Appointment</td>
+                            <td><span class="warning">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="attendance" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Subject-wise Attendance</h2>
+                
+                <div class="form-group">
+                    <label for="subjectFilter">Filter by Subject:</label>
+                    <select id="subjectFilter">
+                        <option value="all">All Subjects</option>
+                        <option value="data-structures">Data Structures</option>
+                        <option value="database-management">Database Management</option>
+                        <option value="computer-networks">Computer Networks</option>
+                        <option value="operating-systems">Operating Systems</option>
+                        <option value="software-engineering">Software Engineering</option>
+                    </select>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Total Classes</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Leave</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjectAttendance">
+                        <tr>
+                            <td>Data Structures</td>
+                            <td>10</td>
+                            <td>8</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>80%</td>
+                        </tr>
+                        <tr>
+                            <td>Database Management</td>
+                            <td>9</td>
+                            <td>8</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>88.9%</td>
+                        </tr>
+                        <tr>
+                            <td>Computer Networks</td>
+                            <td>8</td>
+                            <td>7</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>87.5%</td>
+                        </tr>
+                        <tr>
+                            <td>Operating Systems</td>
+                            <td>9</td>
+                            <td>8</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>88.9%</td>
+                        </tr>
+                        <tr>
+                            <td>Software Engineering</td>
+                            <td>9</td>
+                            <td>7</td>
+                            <td>2</td>
+                            <td>0</td>
+                            <td>77.8%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">Detailed Attendance Log</h2>
+                
+                <div class="form-group">
+                    <label for="monthFilter">Filter by Month:</label>
+                    <select id="monthFilter">
+                        <option value="all">All Months</option>
+                        <option value="march">March 2025</option>
+                        <option value="february">February 2025</option>
+                        <option value="january">January 2025</option>
+                    </select>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Day</th>
+                            <th>Subject</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceLog">
+                        <tr class="march">
+                            <td>21 Mar 2025</td>
+                            <td>Friday</td>
+                            <td>Data Structures</td>
+                            <td>10:00 AM - 11:00 AM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="march">
+                            <td>21 Mar 2025</td>
+                            <td>Friday</td>
+                            <td>Database Management</td>
+                            <td>11:00 AM - 12:00 PM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="march">
+                            <td>20 Mar 2025</td>
+                            <td>Thursday</td>
+                            <td>Computer Networks</td>
+                            <td>09:00 AM - 10:00 AM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="march">
+                            <td>20 Mar 2025</td>
+                            <td>Thursday</td>
+                            <td>Operating Systems</td>
+                            <td>10:00 AM - 11:00 AM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="march">
+                            <td>19 Mar 2025</td>
+                            <td>Wednesday</td>
+                            <td>Software Engineering</td>
+                            <td>02:00 PM - 03:00 PM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="march">
+                            <td>19 Mar 2025</td>
+                            <td>Wednesday</td>
+                            <td>Computer Networks</td>
+                            <td>03:00 PM - 04:00 PM</td>
+                            <td class="attendance-status"><span class="status-dot absent"></span> <span class="absent">Absent</span></td>
+                        </tr>
+                        <tr class="march">
+                            <td>18 Mar 2025</td>
+                            <td>Tuesday</td>
+                            <td>Data Structures</td>
+                            <td>10:00 AM - 11:00 AM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="march">
+                            <td>18 Mar 2025</td>
+                            <td>Tuesday</td>
+                            <td>Operating Systems</td>
+                            <td>11:00 AM - 12:00 PM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="february">
+                            <td>28 Feb 2025</td>
+                            <td>Friday</td>
+                            <td>Database Management</td>
+                            <td>10:00 AM - 11:00 AM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="february">
+                            <td>26 Feb 2025</td>
+                            <td>Wednesday</td>
+                            <td>Software Engineering</td>
+                            <td>02:00 PM - 03:00 PM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="january">
+                            <td>30 Jan 2025</td>
+                            <td>Thursday</td>
+                            <td>Data Structures</td>
+                            <td>10:00 AM - 11:00 AM</td>
+                            <td class="attendance-status"><span class="status-dot present"></span> <span class="present">Present</span></td>
+                        </tr>
+                        <tr class="january">
+                            <td>28 Jan 2025</td>
+                            <td>Tuesday</td>
+                            <td>Operating Systems</td>
+                            <td>11:00 AM - 12:00 PM</td>
+                            <td class="attendance-status"><span class="status-dot leave"></span> <span class="leave">Leave</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="leave" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Apply for Leave</h2>
+                <div id="leaveAlert" class="alert"></div>
+                <form id="leaveForm">
+                    <div class="form-group">
+                        <label for="leaveType">Leave Type:</label>
+                        <select id="leaveType" required>
+                            <option value="">Select Leave Type</option>
+                            <option value="medical">Medical Leave</option>
+                            <option value="personal">Personal Leave</option>
+                            <option value="family">Family Emergency</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fromDate">From Date:</label>
+                        <input type="date" id="fromDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="toDate">To Date:</label>
+                        <input type="date" id="toDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="leaveReason">Reason for Leave:</label>
+                        <textarea id="leaveReason" placeholder="Please provide a detailed reason for your leave request" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="attachDocument">Attach Document (if any):</label>
+                        <input type="file" id="attachDocument">
+                        <p><small>Upload any supporting documents (e.g., medical certificate)</small></p>
+                    </div>
+                    
+                    <button type="submit" class="btn">Submit Leave Request</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">Leave History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Days</th>
+                            <th>Type</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaveHistory">
+                        <tr>
+                            <td>10 Feb 2025</td>
+                            <td>12 Feb 2025</td>
+                            <td>3</td>
+                            <td>Medical</td>
+                            <td>Fever and cold</td>
+                            <td class="leave">Approved</td>
+                        </tr>
+                        <tr>
+                            <td>25 Jan 2025</td>
+                            <td>25 Jan 2025</td>
+                            <td>1</td>
+                            <td>Personal</td>
+                            <td>Family function</td>
+                            <td class="leave">Approved</td>
+                        </tr>
+                        <tr>
+                            <td>25 Mar 2025</td>
+                            <td>26 Mar 2025</td>
+                            <td>2</td>
+                            <td>Medical</td>
+                            <td>Medical Appointment</td>
+                            <td class="warning">Pending</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="calculator" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Attendance Calculator</h2>
+                <p>Use this calculator to estimate your future attendance percentage or to check how many classes you need to attend to reach a target percentage.</p>
+                
+                <div class="form-group">
+                    <label for="calcType">Calculation Type:</label>
+                    <select id="calcType">
+                        <option value="future">Predict Future Attendance</option>
+                        <option value="target">Calculate Classes Needed for Target</option>
+                    </select>
+                </div>
+                
+                <div id="futureCalc">
+                    <div class="form-group">
+                        <label for="currentAttended">Current Classes Attended:</label>
+                        <input type="number" id="currentAttended" value="38" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="currentTotal">Current Total Classes:</label>
+                        <input type="number" id="currentTotal" value="45" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="futureAttend">Future Classes to Attend:</label>
+                        <input type="number" id="futureAttend" value="10" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="futureMiss">Future Classes to Miss:</label>
+                        <input type="number" id="futureMiss" value="2" min="0">
+                    </div>
+                    
+                    <button id="calculateFuture" class="btn">Calculate</button>
+                    
+                    <div class="form-group">
+                        <label>Result:</label>
+                        <div id="futureResult" class="card">
+                            <p>Current Attendance: <strong>84.4%</strong></p>
+                            <p>Future Attendance: <strong>84.2%</strong></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="targetCalc" style="display: none;">
+                    <div class="form-group">
+                        <label for="targetCurrentAttended">Current Classes Attended:</label>
+                        <input type="number" id="targetCurrentAttended" value="38" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="targetCurrentTotal">Current Total Classes:</label>
+                        <input type="number" id="targetCurrentTotal" value="45" min="1">
+                    </div>
+                    
+                   
+
+                    <div class="form-group">
+                            <label for="targetPercentage">Target Attendance Percentage:</label>
+                            <input type="number" id="targetPercentage" value="85" min="1" max="100">
+                     </div>
+                        
+                        <div class="form-group">
+                            <label for="targetRemainingClasses">Remaining Classes in Semester:</label>
+                            <input type="number" id="targetRemainingClasses" value="30" min="0">
+                        </div>
+                        
+                        <button id="calculateTarget" class="btn">Calculate</button>
+                        
+                        <div class="form-group">
+                            <label>Result:</label>
+                            <div id="targetResult" class="card">
+                                <p>Current Attendance: <strong>84.4%</strong></p>
+                                <p>Classes to Attend: <strong>26</strong> out of 30 remaining classes</p>
+                                <p>Maximum Classes You Can Miss: <strong>4</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="digital-attendance" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">Digital Attendance Capture</h2>
+                    <p>Mark your attendance digitally for today's classes using one of the methods below.</p>
+                    
+                    <div class="attendance-tabs">
+                        <div class="attendance-tab active" data-attendance-tab="qr">QR Code</div>
+                        <div class="attendance-tab" data-attendance-tab="location">Geo Location</div>
+                        <div class="attendance-tab" data-attendance-tab="face">Face Recognition</div>
+                    </div>
+                    
+                    <div id="qr-attendance" class="attendance-content active">
+                        <p>Scan the QR code displayed by your instructor to mark your attendance.</p>
+                        <div class="qr-code">
+                            <img src="/api/placeholder/200/200" alt="QR Scanner">
+                        </div>
+                        <div class="form-group">
+                            <label for="qrCode">Or enter the attendance code:</label>
+                            <input type="text" id="qrCode" placeholder="Enter code here">
+                        </div>
+                        <button class="btn" id="submitQrCode">Submit Code</button>
+                        <p id="qrResult" style="margin-top: 10px; display: none;"></p>
+                    </div>
+                    
+                    <div id="location-attendance" class="attendance-content">
+                        <p>Allow location access to mark your attendance.</p>
+                        <div class="location-status">
+                            <p id="locationMessage">Location access required.</p>
+                        </div>
+                        <button class="btn location-btn" id="getLocation">Get Location</button>
+                        <p id="locationResult" style="margin-top: 10px; display: none;"></p>
+                    </div>
+                    
+                    <div id="face-attendance" class="attendance-content">
+                        <p>Use your device's camera for face recognition attendance.</p>
+                        <div class="webcam-container">
+                            <video id="webcam" width="100%" autoplay></video>
+                        </div>
+                        <button class="btn" id="captureFace">Capture & Verify</button>
+                        <p id="faceResult" style="margin-top: 10px; display: none;"></p>
+                    </div>
+                    
+                </div>
+            </div>
+        </body>
+        </html>

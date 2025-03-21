@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance - Attendance Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-bar {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background-color: #303f9f;
+        }
+        .btn-green {
+            background-color: #43a047;
+        }
+        .btn-green:hover {
+            background-color: #388e3c;
+        }
+        .btn-red {
+            background-color: #e53935;
+        }
+        .btn-red:hover {
+            background-color: #d32f2f;
+        }
+        .search-bar {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        .nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+        }
+        .nav li {
+            float: left;
+        }
+        .nav li a {
+            display: block;
+            color: #333;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .nav li a:hover {
+            background-color: #f0f2ff;
+        }
+        .nav li a.active {
+            color: #3f51b5;
+            font-weight: bold;
+            border-bottom: 2px solid #3f51b5;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-present {
+            background-color: #e8f5e9;
+            color: #43a047;
+        }
+        .status-absent {
+            background-color: #ffebee;
+            color: #e53935;
+        }
+        .status-late {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        .checkbox {
+            width: 18px;
+            height: 18px;
+        }
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Attendance Management System</h1>
+        <div>
+            <span>Welcome, Prof. Johnson</span>
+        </div>
+    </div>
+    
+    <div class="nav">
+        <ul>
+            <li><a href="facdashm.html">Dashboard</a></li>
+            <li><a href="markattd.html" class="active">Mark Attendance</a></li>
+            <li><a href="rep.html">Reports</a></li>
+            <li><a href="stu1.html">Students</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Mark Attendance - CS101 (Introduction to Programming)</h2>
+            <div class="info-bar">
+                <p><strong>Date:</strong> March 21, 2025 | <strong>Time:</strong> 09:00 - 10:30 | <strong>Room:</strong> 302 | <strong>Total Students:</strong> 45</p>
+            </div>
+            
+            <input type="text" placeholder="Search students by name or ID..." class="search-bar">
+            
+            <div class="filters">
+                <div class="filter-item">
+                    <input type="checkbox" id="showAll" checked>
+                    <label for="showAll">All</label>
+                </div>
+                <div class="filter-item">
+                    <input type="checkbox" id="showPresent">
+                    <label for="showPresent">Present</label>
+                </div>
+                <div class="filter-item">
+                    <input type="checkbox" id="showAbsent">
+                    <label for="showAbsent">Absent</label>
+                </div>
+                <div class="filter-item">
+                    <input type="checkbox" id="showLate">
+                    <label for="showLate">Late</label>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Status</th>
+                        <th>Previous Attendance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>S2023001</td>
+                        <td>John Smith</td>
+                        <td><span class="status status-present">Present</span></td>
+                        <td>95%</td>
+                        <td class="actions">
+                            <button class="btn btn-green">Present</button>
+                            <button class="btn btn-red">Absent</button>
+                            <button class="btn">Late</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>S2023002</td>
+                        <td>Emma Johnson</td>
+                        <td><span class="status status-absent">Absent</span></td>
+                        <td>87%</td>
+                        <td class="actions">
+                            <button class="btn btn-green">Present</button>
+                            <button class="btn btn-red">Absent</button>
+                            <button class="btn">Late</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>S2023003</td>
+                        <td>Michael Brown</td>
+                        <td><span class="status status-late">Late</span></td>
+                        <td>91%</td>
+                        <td class="actions">
+                            <button class="btn btn-green">Present</button>
+                            <button class="btn btn-red">Absent</button>
+                            <button class="btn">Late</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>S2023004</td>
+                        <td>Sarah Wilson</td>
+                        <td><span class="status status-present">Present</span></td>
+                        <td>98%</td>
+                        <td class="actions">
+                            <button class="btn btn-green">Present</button>
+                            <button class="btn btn-red">Absent</button>
+                            <button class="btn">Late</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>S2023005</td>
+                        <td>David Miller</td>
+                        <td><span class="status status-present">Present</span></td>
+                        <td>92%</td>
+                        <td class="actions">
+                            <button class="btn btn-green">Present</button>
+                            <button class="btn btn-red">Absent</button>
+                            <button class="btn">Late</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td>S2023006</td>
+                        <td>Jennifer Lee</td>
+                        <td><span class="status status-absent">Absent</span></td>
+                        <td>78%</td>
+                        <td class="actions">
+                            <button class="btn btn-green">Present</button>
+                            <button class="btn btn-red">Absent</button>
+                            <button class="btn">Late</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                <div>
+                    <button class="btn">Mark Selected as Present</button>
+                    <button class="btn">Mark Selected as Absent</button>
+                    <button class="btn">Mark Selected as Late</button>
+                </div>
+                <div>
+                    <button class="btn btn-green">Save Attendance</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

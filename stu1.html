@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - Attendance Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background-color: #303f9f;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #3f51b5;
+            color: #3f51b5;
+        }
+        .btn-outline:hover {
+            background-color: #f0f2ff;
+        }
+        .search-bar {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        .nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+        }
+        .nav li {
+            float: left;
+        }
+        .nav li a {
+            display: block;
+            color: #333;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .nav li a:hover {
+            background-color: #f0f2ff;
+        }
+        .nav li a.active {
+            color: #3f51b5;
+            font-weight: bold;
+            border-bottom: 2px solid #3f51b5;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .filter-group select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-good {
+            background-color: #e8f5e9;
+            color: #43a047;
+        }
+        .status-warning {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        .status-alert {
+            background-color: #ffebee;
+            color: #e53935;
+        }
+        .flex-space-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .actions-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .pagination button.active {
+            background-color: #3f51b5;
+            color: white;
+            border-color: #3f51b5;
+        }
+        .student-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .detail-item {
+            margin-bottom: 15px;
+        }
+        .detail-label {
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .detail-value {
+            font-size: 16px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-right: 5px;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            border-bottom: 2px solid #3f51b5;
+            color: #3f51b5;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Attendance Management System</h1>
+        <div>
+            <span>Welcome, Prof. Johnson</span>
+        </div>
+    </div>
+    
+    <div class="nav">
+        <ul>
+            <li><a href="facdashm.html">Dashboard</a></li>
+            <li><a href="markattd.html">Mark Attendance</a></li>
+            <li><a href="rep.html">Reports</a></li>
+            <li><a href="stu1.html" class="active">Students</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="flex-space-between">
+            <h2>Student Management</h2>
+            <div class="actions-header">
+                <button class="btn">Import Students</button>
+                <button class="btn">Add New Student</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="filters">
+                <input type="text" placeholder="Search students by name or ID..." class="search-bar">
+                
+                <div class="filter-group">
+                    <label for="courseFilter">Course</label>
+                    <select id="courseFilter">
+                        <option value="all">All Courses</option>
+                        <option value="cs101">CS101 - Introduction to Programming</option>
+                        <option value="cs205">CS205 - Data Structures</option>
+                        <option value="cs310">CS310 - Database Systems</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="attendanceFilter">Attendance Status</label>
+                    <select id="attendanceFilter">
+                        <option value="all">All Status</option>
+                        <option value="good">Good (>90%)</option>
+                        <option value="warning">Warning (75-90%)</option>
+                        <option value="alert">Alert (<75%)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sortBy">Sort By</label>
+                    <select id="sortBy">
+                        <option value="name">Name</option>
+                        <option value="id">ID</option>
+                        <option value="attendance">Attendance Rate</option>
+                    </select>
+                </div>
+                
+                <button class="btn">Apply Filters</button>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Courses</th>
+                        <th>Overall Attendance</th>
+                        <th>Last Attendance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>S2023001</td>
+                        <td>John Smith</td>
+                        <td>CS101, CS205</td>
+                        <td><span class="status status-good">95%</span></td>
+                        <td>Mar 21, 2025 (Present)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>S2023002</td>
+                        <td>Emma Johnson</td>
+                        <td>CS101, CS205, CS310</td>
+                        <td><span class="status status-warning">87%</span></td>
+                        <td>Mar 21, 2025 (Absent)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>S2023003</td>
+                        <td>Michael Brown</td>
+                        <td>CS101, CS310</td>
+                        <td><span class="status status-good">91%</span></td>
+                        <td>Mar 21, 2025 (Late)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>S2023004</td>
+                        <td>Sarah Wilson</td>
+                        <td>CS101</td>
+                        <td><span class="status status-good">98%</span></td>
+                        <td>Mar 21, 2025 (Present)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>S2023005</td>
+                        <td>David Miller</td>
+                        <td>CS101, CS205</td>
+                        <td><span class="status status-good">92%</span></td>
+                        <td>Mar 21, 2025 (Present)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>S2023006</td>
+                        <td>Jennifer Lee</td>
+                        <td>CS101, CS205, CS310</td>
+                        <td><span class="status status-alert">78%</span></td>
+                        <td>Mar 21, 2025 (Absent)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>S2023007</td>
+                        <td>Robert Taylor</td>
+                        <td>CS205, CS310</td>
+                        <td><span class="status status-good">94%</span></td>
+                        <td>Mar 20, 2025 (Present)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>S2023008</td>
+                        <td>Linda Clark</td>
+                        <td>CS101, CS310</td>
+                        <td><span class="status status-alert">71%</span></td>
+                        <td>Mar 21, 2025 (Absent)</td>
+                        <td>
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-outline">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="pagination">
+                <button>Previous</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>Next</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Student Detail View</h3>
+            <div class="tabs">
+                <div class="tab active">Basic Info</div>
+                <div class="tab">Attendance History</div>
+                <div class="tab">Course Performance</div>
+                <div class="tab">Communications</div>
+            </div>
+            
+            <div class="student-details">
+                <div>
+                    <div class="detail-item">
+                        <div class="detail-label">Student ID</div>
+                        <div class="detail-value">S2023001</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value">John Smith</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value">john.smith@university.edu</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Phone</div>
+                        <div class="detail-value">(555) 123-4567</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="detail-item">
+                        <div class="detail-label">Program</div>
+                        <div class="detail-value">Computer Science</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Enrolled Courses</div>
+                        <div class="detail-value">CS101 - Introduction to Programming, CS205 - Data Structures</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Overall Attendance</div>
+                        <div class="detail-value">95% (Good)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Last Attendance</div>
+                        <div class="detail-value">Mar 21, 2025 - CS101 (Present)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn btn-outline">Contact Student</button>
+                <button class="btn btn-outline">Generate Attendance Report</button>
+                <button class="btn">Edit Details</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
